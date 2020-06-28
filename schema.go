@@ -31,6 +31,16 @@ func (s *Schema) DropTable(name string, soft bool, option string) {
 	s.pool = append(s.pool, dropTableCommand{name, soft, option})
 }
 
+// DropTableIfExists removes table if exists from schema
+// Warning ⚠️ BC incompatible
+//
+// Example:
+//		var s migrator.Schema
+//		s.DropTableIfExists("test")
+func (s *Schema) DropTableIfExists(name string) {
+	s.pool = append(s.pool, dropTableCommand{name, true, ""})
+}
+
 // RenameTable executes command to rename table
 // Warning ⚠️ BC incompatible
 //

@@ -31,6 +31,18 @@ func TestSchemaDropTable(t *testing.T) {
 	assert.Equal(dropTableCommand{"test", false, ""}, s.pool[0])
 }
 
+func TestSchemaDropTableIfExists(t *testing.T) {
+	assert := assert.New(t)
+
+	s := Schema{}
+	assert.Len(s.pool, 0)
+
+	s.DropTableIfExists("test")
+
+	assert.Len(s.pool, 1)
+	assert.Equal(dropTableCommand{"test", true, ""}, s.pool[0])
+}
+
 func TestSchemaRenameTable(t *testing.T) {
 	assert := assert.New(t)
 
