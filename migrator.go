@@ -1,4 +1,7 @@
 // Package migrator represents MySQL database migrator
+//
+// MySQL database migrator designed to run migrations to your features and manage database schema update with intuitive go code.
+// It is compatible with latest MySQL v8.
 package migrator
 
 import (

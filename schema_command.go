@@ -1,4 +1,3 @@
-// Package migrator represents MySQL database migrator
 package migrator
 
 import (

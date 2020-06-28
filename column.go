@@ -1,4 +1,3 @@
-// Package migrator represents MySQL database migrator
 package migrator
 
 import (
@@ -31,6 +30,7 @@ type columnType interface {
 // Integer represents integer value in DB: {tiny,small,medium,big}int
 //
 // Default migrator.Integer will build a sql row: `int NOT NULL`
+//
 // Examples:
 //		tinyint		➡️ migrator.Integer{Prefix: "tiny", Unsigned: true, Precision: 1, Default: "0"}
 //			↪️ tinyint(1) unsigned NOT NULL DEFAULT 0
@@ -91,6 +91,7 @@ func (i Integer) buildRow() string {
 // `float`, `double` or `decimal`
 //
 // Default migrator.Floatable will build a sql row: `float NOT NULL`
+//
 // Examples:
 //		float	➡️ migrator.Floatable{Precision: 2, Nullable: true}
 //			↪️ float(2) NULL
@@ -156,6 +157,7 @@ func (f Floatable) buildRow() string {
 // `date`, `datetime`, `timestamp`, `time` or `year`
 //
 // Default migrator.Timable will build a sql row: `timestamp NOT NULL`
+//
 // Examples:
 //		date		➡️ migrator.Timable{Type: "date", Nullable: true}
 //			↪️ date NULL
@@ -207,6 +209,7 @@ func (t Timable) buildRow() string {
 // String represents basic DB string column type: `char` or `varchar`
 //
 // Default migrator.String will build a sql row: `varchar COLLATE utf8mb4_unicode_ci NOT NULL`
+//
 // Examples:
 //		char	➡️ migrator.String{Fixed: true, Precision: 36, Nullable: true, OnUpdate: "set null", Comment: "uuid"}
 //			↪️ char(36) COLLATE utf8mb4_unicode_ci NULL ON UPDATE set null COMMENT 'uuid'
@@ -275,6 +278,7 @@ func (s String) buildRow() string {
 //  - {tiny,medium,long}blob
 //
 // Default migrator.Text will build a sql row: `text COLLATE utf8mb4_unicode_ci NOT NULL`
+//
 // Examples:
 //		tinytext	➡️ migrator.Text{Prefix: "tiny"}
 //			↪️ tinytext COLLATE utf8mb4_unicode_ci NOT NULL
@@ -349,6 +353,7 @@ func (t Text) buildRow() string {
 // JSON represents DB column type `json`
 //
 // Default migrator.JSON will build a sql row: `json NOT NULL`
+//
 // Examples:
 //		➡️ migrator.JSON{Nullable: true, Comment: "user data"}
 //			↪️ json NULL COMMENT 'user data'
@@ -388,6 +393,7 @@ func (j JSON) buildRow() string {
 // Enum represents choisable value. In database represented by: `enum` or `set`
 //
 // Default migrator.Enum will build a sql row: `enum('') NOT NULL`
+//
 // Examples:
 //		enum	➡️ migrator.Enum{Values: []string{"on", "off"}, Default: "off", Nullable: true, OnUpdate: "set null"}
 //			↪️ enum('on', 'off') NULL DEFAULT 'off' ON UPDATE set null
@@ -438,6 +444,7 @@ func (e Enum) buildRow() string {
 // Bit represents default `bit` column type
 //
 // Default migrator.Bit will build a sql row: `bit NOT NULL`
+//
 // Examples:
 //		➡️ migrator.Bit{Precision: 8, Default: "1", Comment: "mario game code"}
 //			↪️ bit(8) NOT NULL DEFAULT 1 COMMENT 'mario game code'
@@ -483,6 +490,7 @@ func (b Bit) buildRow() string {
 // Binary represents binary column type: `binary` or `varbinary`
 //
 // Default migrator.Binary will build a sql row: `varbinary NOT NULL`
+//
 // Examples:
 //		binary		➡️ migrator.Binary{Fixed: true, Precision: 36, Default: "1", Comment: "uuid"}
 //			↪️ binary(36) NOT NULL DEFAULT 1 COMMENT 'uuid'
