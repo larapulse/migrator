@@ -109,6 +109,214 @@ func TestTimestampsColumn(t *testing.T) {
 	assert.Equal(Timable{Type: "timestamp", Default: "CURRENT_TIMESTAMP", OnUpdate: "CURRENT_TIMESTAMP"}, table.columns[1].definition)
 }
 
+func TestIntColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Int("number", 64, true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("number", table.columns[0].field)
+	assert.Equal(Integer{Precision: 64, Unsigned: true}, table.columns[0].definition)
+}
+
+func TestBigIntColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.BigInt("number", 64, true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("number", table.columns[0].field)
+	assert.Equal(Integer{Prefix: "big", Precision: 64, Unsigned: true}, table.columns[0].definition)
+}
+
+func TestFloatColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Float("number", 15, 2)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("number", table.columns[0].field)
+	assert.Equal(Floatable{Precision: 15, Scale: 2}, table.columns[0].definition)
+}
+
+func TestFixedFloatColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.FixedFloat("number", 15, 2)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("number", table.columns[0].field)
+	assert.Equal(Floatable{Type: "decimal", Precision: 15, Scale: 2}, table.columns[0].definition)
+}
+
+func TestDecimalColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Decimal("number", 15, 2)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("number", table.columns[0].field)
+	assert.Equal(Floatable{Type: "decimal", Precision: 15, Scale: 2}, table.columns[0].definition)
+}
+
+func TestVarcharColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Varchar("string", 64)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("string", table.columns[0].field)
+	assert.Equal(String{Precision: 64}, table.columns[0].definition)
+}
+
+func TestCharColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Char("string", 32)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("string", table.columns[0].field)
+	assert.Equal(String{Fixed: true, Precision: 32}, table.columns[0].definition)
+}
+
+func TestTextColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Text("string", true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("string", table.columns[0].field)
+	assert.Equal(Text{Nullable: true}, table.columns[0].definition)
+}
+
+func TestBlobColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Blob("string", true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("string", table.columns[0].field)
+	assert.Equal(Text{Blob: true, Nullable: true}, table.columns[0].definition)
+}
+
+func TestJsonColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.JSON("data")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("data", table.columns[0].field)
+	assert.Equal(JSON{}, table.columns[0].definition)
+}
+
+func TestTimestampColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Timestamp("date", true, "CURRENT_TIMESTAMP")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("date", table.columns[0].field)
+	assert.Equal(Timable{Nullable: true, Default: "CURRENT_TIMESTAMP"}, table.columns[0].definition)
+}
+
+func TestDateColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Date("date", true, "NOW()")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("date", table.columns[0].field)
+	assert.Equal(Timable{Type: "date", Nullable: true, Default: "NOW()"}, table.columns[0].definition)
+}
+
+func TestTimeColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Time("time", true, "NOW()")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("time", table.columns[0].field)
+	assert.Equal(Timable{Type: "time", Nullable: true, Default: "NOW()"}, table.columns[0].definition)
+}
+
+func TestYearColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Year("year", true, "YEAR(NOW())")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("year", table.columns[0].field)
+	assert.Equal(Timable{Type: "year", Nullable: true, Default: "YEAR(NOW())"}, table.columns[0].definition)
+}
+
+func TestBinaryColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Binary("binary", 36, true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("binary", table.columns[0].field)
+	assert.Equal(Binary{Fixed: true, Precision: 36, Nullable: true}, table.columns[0].definition)
+}
+
+func TestVarbinaryColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.Varbinary("binary", 36, true)
+
+	assert.Len(table.columns, 1)
+	assert.Equal("binary", table.columns[0].field)
+	assert.Equal(Binary{Precision: 36, Nullable: true}, table.columns[0].definition)
+}
+
 func TestTablePrimaryIndex(t *testing.T) {
 	t.Run("it skips adding key on empty columns list", func(t *testing.T) {
 		assert := assert.New(t)

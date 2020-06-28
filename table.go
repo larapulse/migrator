@@ -85,6 +85,86 @@ func (t *Table) Timestamps() {
 	})
 }
 
+// Int adds int(precision) column to the table
+func (t *Table) Int(name string, precision uint16, unsigned bool) {
+	t.Column(name, Integer{Precision: precision, Unsigned: unsigned})
+}
+
+// BigInt adds bigint(precision) column to the table
+func (t *Table) BigInt(name string, precision uint16, unsigned bool) {
+	t.Column(name, Integer{Prefix: "big", Precision: precision, Unsigned: unsigned})
+}
+
+// Float adds float(precision,scale) column to the table
+func (t *Table) Float(name string, precision uint16, scale uint16) {
+	t.Column(name, Floatable{Precision: precision, Scale: scale})
+}
+
+// FixedFloat is an alias to decimal(precision,scale) column
+func (t *Table) FixedFloat(name string, precision uint16, scale uint16) {
+	t.Decimal(name, precision, scale)
+}
+
+// Decimal adds decimal(precision,scale) column to the table
+func (t *Table) Decimal(name string, precision uint16, scale uint16) {
+	t.Column(name, Floatable{Type: "decimal", Precision: precision, Scale: scale})
+}
+
+// Varchar adds varchar(precision) column to the table
+func (t *Table) Varchar(name string, precision uint16) {
+	t.Column(name, String{Precision: precision})
+}
+
+// Char adds char(precision) column to the table
+func (t *Table) Char(name string, precision uint16) {
+	t.Column(name, String{Fixed: true, Precision: precision})
+}
+
+// Text adds text column to the table
+func (t *Table) Text(name string, nullable bool) {
+	t.Column(name, Text{Nullable: nullable})
+}
+
+// Blob adds blob column to the table
+func (t *Table) Blob(name string, nullable bool) {
+	t.Column(name, Text{Blob: true, Nullable: nullable})
+}
+
+// JSON adds json column to the table
+func (t *Table) JSON(name string) {
+	t.Column(name, JSON{})
+}
+
+// Timestamp adds timestamp column to the table
+func (t *Table) Timestamp(name string, nullable bool, def string) {
+	t.Column(name, Timable{Nullable: nullable, Default: def})
+}
+
+// Date adds date column to the table
+func (t *Table) Date(name string, nullable bool, def string) {
+	t.Column(name, Timable{Type: "date", Nullable: nullable, Default: def})
+}
+
+// Time adds time column to the table
+func (t *Table) Time(name string, nullable bool, def string) {
+	t.Column(name, Timable{Type: "time", Nullable: nullable, Default: def})
+}
+
+// Year adds year column to the table
+func (t *Table) Year(name string, nullable bool, def string) {
+	t.Column(name, Timable{Type: "year", Nullable: nullable, Default: def})
+}
+
+// Binary adds binary(precision) column to the table
+func (t *Table) Binary(name string, precision uint16, nullable bool) {
+	t.Column(name, Binary{Fixed: true, Precision: precision, Nullable: nullable})
+}
+
+// Varbinary adds varbinary(precision) column to the table
+func (t *Table) Varbinary(name string, precision uint16, nullable bool) {
+	t.Column(name, Binary{Precision: precision, Nullable: nullable})
+}
+
 // Primary adds primary key
 func (t *Table) Primary(columns ...string) {
 	if len(columns) == 0 {
