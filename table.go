@@ -42,6 +42,12 @@ func (t *Table) UniqueID(name string) {
 	t.Primary(name)
 }
 
+// BinaryID adds unique binary id column (represented as UUID) that is primary key
+func (t *Table) BinaryID(name string) {
+	t.Column(name, Binary{Fixed: true, Precision: 16, Default: "(UUID_TO_BIN(UUID()))"})
+	t.Primary(name)
+}
+
 // Boolean represented in DB as tinyint
 func (t *Table) Boolean(name string, def string) {
 	// tinyint(1)

@@ -52,6 +52,22 @@ func TestUniqueIDColumn(t *testing.T) {
 	assert.Equal(key{typ: "primary", columns: []string{"id"}}, table.indexes[0])
 }
 
+func TestBinaryID(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+	assert.Len(table.indexes, 0)
+
+	table.BinaryID("id")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("id", table.columns[0].field)
+	assert.Equal(Binary{Default: "(UUID_TO_BIN(UUID()))", Fixed: true, Precision: 16}, table.columns[0].definition)
+	assert.Len(table.indexes, 1)
+	assert.Equal(key{typ: "primary", columns: []string{"id"}}, table.indexes[0])
+}
+
 func TestBooleanColumn(t *testing.T) {
 	assert := assert.New(t)
 	table := Table{}
