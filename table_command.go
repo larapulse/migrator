@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// TableCommands is pool of commands to be executed on table
+// TableCommands is a pool of commands to be executed on the table.
 // https://dev.mysql.com/doc/refman/8.0/en/alter-table.html
 type TableCommands []command
 
@@ -19,7 +19,7 @@ func (tc TableCommands) toSQL() string {
 	return strings.Join(rows, ", ")
 }
 
-// AddColumnCommand is a command to add column to the table
+// AddColumnCommand is a command to add the column to the table.
 type AddColumnCommand struct {
 	Name   string
 	Column columnType
@@ -48,9 +48,10 @@ func (c AddColumnCommand) toSQL() string {
 	return sql
 }
 
-// RenameColumnCommand is a command to rename column in the table
-// Warning ⚠️ BC incompatible
-// Info ℹ️ extensions for Oracle compatibility
+// RenameColumnCommand is a command to rename a column in the table.
+// Warning ⚠️ BC incompatible!
+//
+// Info ℹ️ extension for Oracle compatibility.
 type RenameColumnCommand struct {
 	Old string
 	New string
@@ -64,9 +65,10 @@ func (c RenameColumnCommand) toSQL() string {
 	return fmt.Sprintf("RENAME COLUMN `%s` TO `%s`", c.Old, c.New)
 }
 
-// ModifyColumnCommand is a command to modify column type
-// Warning ⚠️ BC incompatible
-// Info ℹ️ extensions for Oracle compatibility
+// ModifyColumnCommand is a command to modify column type.
+// Warning ⚠️ BC incompatible!
+//
+// Info ℹ️ extension for Oracle compatibility.
 type ModifyColumnCommand struct {
 	Name   string
 	Column columnType
@@ -85,8 +87,8 @@ func (c ModifyColumnCommand) toSQL() string {
 	return fmt.Sprintf("MODIFY `%s` %s", c.Name, definition)
 }
 
-// ChangeColumnCommand is a default command to change column
-// Warning ⚠️ BC incompatible
+// ChangeColumnCommand is a default command to change column.
+// Warning ⚠️ BC incompatible!
 type ChangeColumnCommand struct {
 	From   string
 	To     string
@@ -106,11 +108,11 @@ func (c ChangeColumnCommand) toSQL() string {
 	return fmt.Sprintf("CHANGE `%s` `%s` %s", c.From, c.To, c.Column.buildRow())
 }
 
-// DropColumnCommand is a command to drop column from the table
-// Warning ⚠️ BC incompatible
+// DropColumnCommand is a command to drop a column from the table.
+// Warning ⚠️ BC incompatible!
 type DropColumnCommand string
 
-// campatible with Oracle
+// Info ℹ️ campatible with Oracle
 func (c DropColumnCommand) toSQL() string {
 	if c == "" {
 		return ""
@@ -119,7 +121,7 @@ func (c DropColumnCommand) toSQL() string {
 	return fmt.Sprintf("DROP COLUMN `%s`", c)
 }
 
-// AddIndexCommand adds a key to the table
+// AddIndexCommand adds a key to the table.
 type AddIndexCommand struct {
 	Name    string
 	Columns []string
@@ -133,7 +135,7 @@ func (c AddIndexCommand) toSQL() string {
 	return fmt.Sprintf("ADD KEY `%s` (`%s`)", c.Name, strings.Join(c.Columns, "`, `"))
 }
 
-// DropIndexCommand removes the key from the table
+// DropIndexCommand removes the key from the table.
 type DropIndexCommand string
 
 func (c DropIndexCommand) toSQL() string {
@@ -144,7 +146,7 @@ func (c DropIndexCommand) toSQL() string {
 	return fmt.Sprintf("DROP KEY `%s`", c)
 }
 
-// AddForeignCommand adds the foreign key contraint to the table
+// AddForeignCommand adds the foreign key constraint to the table.
 type AddForeignCommand struct {
 	Foreign foreign
 }
@@ -157,7 +159,7 @@ func (c AddForeignCommand) toSQL() string {
 	return "ADD " + c.Foreign.render()
 }
 
-// DropForeignCommand is a command to remove foreign key contraint
+// DropForeignCommand is a command to remove a foreign key constraint.
 type DropForeignCommand string
 
 func (c DropForeignCommand) toSQL() string {
@@ -168,7 +170,7 @@ func (c DropForeignCommand) toSQL() string {
 	return fmt.Sprintf("DROP FOREIGN KEY `%s`", c)
 }
 
-// AddUniqueIndexCommand is a command to add unique key to the table on some columns
+// AddUniqueIndexCommand is a command to add a unique key to the table on some columns.
 type AddUniqueIndexCommand struct {
 	Key     string
 	Columns []string
@@ -182,7 +184,7 @@ func (c AddUniqueIndexCommand) toSQL() string {
 	return fmt.Sprintf("ADD UNIQUE KEY `%s` (`%s`)", c.Key, strings.Join(c.Columns, "`, `"))
 }
 
-// AddPrimaryIndexCommand is a command to add a primary key
+// AddPrimaryIndexCommand is a command to add a primary key.
 type AddPrimaryIndexCommand string
 
 func (c AddPrimaryIndexCommand) toSQL() string {
@@ -193,7 +195,7 @@ func (c AddPrimaryIndexCommand) toSQL() string {
 	return fmt.Sprintf("ADD PRIMARY KEY (`%s`)", c)
 }
 
-// DropPrimaryIndexCommand is a command to remove primary key from the table
+// DropPrimaryIndexCommand is a command to remove the primary key from the table.
 type DropPrimaryIndexCommand struct{}
 
 func (c DropPrimaryIndexCommand) toSQL() string {

@@ -27,7 +27,7 @@ type columnType interface {
 	buildRow() string
 }
 
-// Integer represents integer value in DB: {tiny,small,medium,big}int
+// Integer represents an integer value in DB: {tiny,small,medium,big}int
 //
 // Default migrator.Integer will build a sql row: `int NOT NULL`
 //
@@ -87,7 +87,7 @@ func (i Integer) buildRow() string {
 	return sql
 }
 
-// Floatable replresents number with floating point in DB:
+// Floatable represents a number with a floating point in DB:
 // `float`, `double` or `decimal`
 //
 // Default migrator.Floatable will build a sql row: `float NOT NULL`
@@ -390,7 +390,7 @@ func (j JSON) buildRow() string {
 	return sql
 }
 
-// Enum represents choisable value. In database represented by: `enum` or `set`
+// Enum represents choosable value. In the database represented by: `enum` or `set`
 //
 // Default migrator.Enum will build a sql row: `enum('') NOT NULL`
 //

@@ -1,7 +1,7 @@
 // Package migrator represents MySQL database migrator
 //
 // MySQL database migrator designed to run migrations to your features and manage database schema update with intuitive go code.
-// It is compatible with latest MySQL v8.
+// It is compatible with the latest MySQL v8.
 package migrator
 
 import (
@@ -15,20 +15,20 @@ import (
 const migrationTable = "migrations"
 
 var (
-	// ErrTableNotExists returned when migration table not found
-	ErrTableNotExists = errors.New("Migration table does not exists")
+	// ErrTableNotExists returns when migration table not found
+	ErrTableNotExists = errors.New("Migration table does not exist")
 
-	// ErrNoMigrationDefined returned when no migations defined in the migrations pool
+	// ErrNoMigrationDefined returns when no migrations defined in the migrations pool
 	ErrNoMigrationDefined = errors.New("No migrations defined")
 
-	// ErrEmptyRollbackStack returned when nothing can be reverted
+	// ErrEmptyRollbackStack returns when nothing can be reverted
 	ErrEmptyRollbackStack = errors.New("Nothing to rollback, there are no migration executed")
 
-	// ErrMissingMigrationName returned when migration name is missing
+	// ErrMissingMigrationName returns when migration name is missing
 	ErrMissingMigrationName = errors.New("Missing migration name")
 
-	// ErrNoSQLCommandsToRun returned when migration is invalid and has not commands in the pool
-	ErrNoSQLCommandsToRun = errors.New("There is no command to be executed")
+	// ErrNoSQLCommandsToRun returns when migration is invalid and has no commands in the pool
+	ErrNoSQLCommandsToRun = errors.New("There are no commands to be executed")
 )
 
 type migrationEntry struct {
@@ -38,10 +38,10 @@ type migrationEntry struct {
 	appliedAt time.Time
 }
 
-// Migrator represents a struct with migrations, that should be executed
+// Migrator represents a struct with migrations, that should be executed.
 //
-// Default migration table name is `migrations`, but it can be re-defined
-// Pool is a list of migrations that should be migrated
+// Default migration table name is `migrations`, but it can be re-defined.
+// Pool is a list of migrations that should be migrated.
 type Migrator struct {
 	// Name of the table to track executed migrations
 	TableName string
@@ -50,7 +50,7 @@ type Migrator struct {
 	executed []migrationEntry
 }
 
-// Migrate run all migrations from pool and stores in migration table executed migration
+// Migrate runs all migrations from pool and stores in migration table executed migration.
 func (m Migrator) Migrate(db *sql.DB) (migrated []string, err error) {
 	if len(m.Pool) == 0 {
 		return migrated, ErrNoMigrationDefined
@@ -97,7 +97,7 @@ func (m Migrator) Migrate(db *sql.DB) (migrated []string, err error) {
 	return migrated, nil
 }
 
-// Rollback reverts last executed batch of migratios
+// Rollback reverts last executed batch of migrations.
 func (m Migrator) Rollback(db *sql.DB) (reverted []string, err error) {
 	if len(m.Pool) == 0 {
 		return reverted, ErrNoMigrationDefined
@@ -149,7 +149,7 @@ func (m Migrator) Rollback(db *sql.DB) (reverted []string, err error) {
 	return reverted, nil
 }
 
-// Revert reverts all executed migration from the pool
+// Revert reverts all executed migration from the pool.
 func (m Migrator) Revert(db *sql.DB) (reverted []string, err error) {
 	if len(m.Pool) == 0 {
 		return reverted, ErrNoMigrationDefined

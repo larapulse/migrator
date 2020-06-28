@@ -1,12 +1,12 @@
 package migrator
 
-// Schema allows to add commands on schema.
+// Schema allows adding commands on the schema.
 // It should be used within migration to add migration commands.
 type Schema struct {
 	pool []command
 }
 
-// CreateTable allows to create table in schema
+// CreateTable allows creating the table in the schema.
 //
 // Example:
 //		var s migrator.Schema
@@ -17,8 +17,8 @@ func (s *Schema) CreateTable(t Table) {
 	s.pool = append(s.pool, createTableCommand{t})
 }
 
-// DropTable removes table from schema
-// Warning ⚠️ BC incompatible
+// DropTable removes a table from the schema.
+// Warning ⚠️ BC incompatible!
 //
 // Example:
 //		var s migrator.Schema
@@ -30,8 +30,8 @@ func (s *Schema) DropTable(name string, soft bool, option string) {
 	s.pool = append(s.pool, dropTableCommand{name, soft, option})
 }
 
-// DropTableIfExists removes table if exists from schema
-// Warning ⚠️ BC incompatible
+// DropTableIfExists removes table if exists from the schema.
+// Warning ⚠️ BC incompatible!
 //
 // Example:
 //		var s migrator.Schema
@@ -40,8 +40,8 @@ func (s *Schema) DropTableIfExists(name string) {
 	s.pool = append(s.pool, dropTableCommand{name, true, ""})
 }
 
-// RenameTable executes command to rename table
-// Warning ⚠️ BC incompatible
+// RenameTable executes a command to rename the table.
+// Warning ⚠️ BC incompatible!
 //
 // Example:
 //		var s migrator.Schema
@@ -50,7 +50,7 @@ func (s *Schema) RenameTable(old string, new string) {
 	s.pool = append(s.pool, renameTableCommand{old: old, new: new})
 }
 
-// AlterTable makes changes on table level
+// AlterTable makes changes on the table level.
 //
 // Example:
 //		var s migrator.Schema
@@ -60,7 +60,7 @@ func (s *Schema) AlterTable(name string, c TableCommands) {
 	s.pool = append(s.pool, alterTableCommand{name, c})
 }
 
-// CustomCommand allows to add custom command to the Schema
+// CustomCommand allows adding the custom command to the Schema.
 //
 // Example:
 //		type customCommand string

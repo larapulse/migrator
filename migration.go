@@ -8,7 +8,7 @@ type executableSQL interface {
 
 // Migration represents migration entity
 //
-// Name 		should be unique name to specify migration. It is up to you to choose the name you like
+// Name 		should be a unique name to specify migration. It is up to you to choose the name you like
 // Up() 		should return Schema with prepared commands to be migrated
 // Down()		should return Schema with prepared commands to be reverted
 // Transaction	optinal flag to enable transaction for migration

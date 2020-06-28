@@ -665,7 +665,7 @@ func TestHasTable(t *testing.T) {
 		assert.Equal(t, true, got)
 	})
 
-	t.Run("it returns false if table does not exists", func(t *testing.T) {
+	t.Run("it returns false if table does not exist", func(t *testing.T) {
 		m := Migrator{}
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()

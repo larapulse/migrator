@@ -2,13 +2,13 @@ package migrator
 
 import "strings"
 
-// Table is an entity to create table
+// Table is an entity to create a table.
 //
-// Name			table name
-// Engine		default: InnoDB
-// Charset		default: utf8mb4 or first part of collation (if set)
-// Collation	default: utf8mb4_unicode_ci or charset with `_unicode_ci` suffix
-// Comment		optional comment on table
+// - Name		table name
+// - Engine		default: InnoDB
+// - Charset	default: utf8mb4 or first part of collation (if set)
+// - Collation	default: utf8mb4_unicode_ci or charset with `_unicode_ci` suffix
+// - Comment	optional comment on table
 type Table struct {
 	Name      string
 	columns   columns
@@ -20,12 +20,12 @@ type Table struct {
 	Comment   string
 }
 
-// Column adds column to the table
+// Column adds a column to the table
 func (t *Table) Column(name string, c columnType) {
 	t.columns = append(t.columns, column{field: name, definition: c})
 }
 
-// ID adds bigint `id` column that is primary key
+// ID adds bigint `id` column that is the primary key
 func (t *Table) ID(name string) {
 	t.Column(name, Integer{
 		Prefix:        "big",
@@ -35,13 +35,13 @@ func (t *Table) ID(name string) {
 	t.Primary(name)
 }
 
-// UniqueID adds unique id column (represented as UUID) that is primary key
+// UniqueID adds unique id column (represented as UUID) that is the primary key
 func (t *Table) UniqueID(name string) {
 	t.UUID(name, "(UUID())", false)
 	t.Primary(name)
 }
 
-// BinaryID adds unique binary id column (represented as UUID) that is primary key
+// BinaryID adds unique binary id column (represented as UUID) that is the primary key
 func (t *Table) BinaryID(name string) {
 	t.Column(name, Binary{Fixed: true, Precision: 16, Default: "(UUID_TO_BIN(UUID()))"})
 	t.Primary(name)

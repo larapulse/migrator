@@ -1,6 +1,6 @@
 # MySQL database migrator
 
-<img align="right" width="159px" src="./logo.png">
+<img align="right" width="159px" src="https://github.com/larapulse/migrator/blob/master/logo.png">
 
 [![Build Status](https://travis-ci.org/larapulse/migrator.svg)](https://travis-ci.org/larapulse/migrator)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
@@ -10,7 +10,7 @@
 [![Release](https://img.shields.io/github/release/larapulse/migrator.svg)](https://github.com/larapulse/migrator/releases)
 [![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/larapulse/migrator)](https://www.tickgit.com/browse?repo=github.com/larapulse/migrator)
 
-MySQL database migrator designed to run migrations to your features and manage database schema update with intuitive go code. It is compatible with latest MySQL v8.
+MySQL database migrator designed to run migrations to your features and manage database schema update with intuitive go code. It is compatible with the latest MySQL v8.
 
 ## Installation
 
@@ -104,7 +104,7 @@ for _, m := range migrated {
 fmt.Println("Migration did run successfully")
 ```
 
-After first migration run, `migrations` table will be created:
+After the first migration run, `migrations` table will be created:
 
 ```
 +----+-------------------------------------+-------+---------------------+
@@ -201,7 +201,7 @@ posts.Column("data", customType("json not null"))
 posts.Timestamps()
 ```
 
-Same logic is for adding custom commands to the Schema to be migrated or reverted, just be sure you implement `command` interface:
+The same logic is for adding custom commands to the Schema to be migrated or reverted, just be sure you implement `command` interface:
 
 ```go
 type customCommand string
