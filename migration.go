@@ -32,7 +32,7 @@ type executableSQL interface {
 //			Down: func() migrator.Schema {
 //				var s migrator.Schema
 //
-//				s.DropTable("posts")
+//				s.DropTableIfExists("posts")
 //
 //				return s
 //			},

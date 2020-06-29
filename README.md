@@ -52,7 +52,7 @@ var migrations = []migrator.Migration{
 		Down: func() migrator.Schema {
 			var s migrator.Schema
 
-			s.DropTable("posts")
+			s.DropTableIfExists("posts")
 
 			return s
 		},
@@ -78,7 +78,7 @@ var migrations = []migrator.Migration{
 		Down: func() migrator.Schema {
 			var s migrator.Schema
 
-			s.DropTable("comments")
+			s.DropTableIfExists("comments")
 
 			return s
 		},
@@ -146,8 +146,8 @@ var migration = migrator.Migration{
 	Down: func() migrator.Schema {
 		var s migrator.Schema
 
-		s.DropTable("users")
-		s.DropTable("posts")
+		s.DropTableIfExists("users")
+		s.DropTableIfExists("posts")
 
 		return s
 	},
