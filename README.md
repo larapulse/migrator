@@ -89,19 +89,19 @@ m := migrator.Migrator{Pool: migrations}
 migrated, err = m.Migrate(db)
 
 if err != nil {
-	fmt.Errorf("Could not migrate: %v", err)
+	log.Errorf("Could not migrate: %v", err)
 	os.Exit(1)
 }
 
 if len(migrated) == 0 {
-	fmt.Println("Nothing were migrated.")
+	log.Print("Nothing were migrated.")
 }
 
 for _, m := range migrated {
-	fmt.Println("Migration: "+m+" was migrated ✅")
+	log.Printf("Migration: %s was migrated ✅", m)
 }
 
-fmt.Println("Migration did run successfully")
+log.Print("Migration did run successfully")
 ```
 
 After the first migration run, `migrations` table will be created:
@@ -164,16 +164,16 @@ m := migrator.Migrator{Pool: migrations}
 reverted, err := m.Rollback(db)
 
 if err != nil {
-	fmt.Errorf("Could not roll back migrations: %v", err)
+	log.Errorf("Could not roll back migrations: %v", err)
 	os.Exit(1)
 }
 
 if len(reverted) == 0 {
-	fmt.Println("Nothing were rolled back.")
+	log.Print("Nothing were rolled back.")
 }
 
 for _, m := range reverted {
-	fmt.Println("Migration: "+m+" was rolled back ✅")
+	log.Printf("Migration: %s was rolled back ✅", m)
 }
 ```
 
