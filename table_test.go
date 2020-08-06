@@ -104,9 +104,9 @@ func TestTimestampsColumn(t *testing.T) {
 
 	assert.Len(table.columns, 2)
 	assert.Equal("created_at", table.columns[0].field)
-	assert.Equal(Timable{Type: "timestamp", Default: "CURRENT_TIMESTAMP"}, table.columns[0].definition)
+	assert.Equal(Timable{Type: "timestamp", Precision: 6, Default: "CURRENT_TIMESTAMP(6)"}, table.columns[0].definition)
 	assert.Equal("updated_at", table.columns[1].field)
-	assert.Equal(Timable{Type: "timestamp", Default: "CURRENT_TIMESTAMP", OnUpdate: "CURRENT_TIMESTAMP"}, table.columns[1].definition)
+	assert.Equal(Timable{Type: "timestamp", Precision: 6, Default: "CURRENT_TIMESTAMP(6)", OnUpdate: "CURRENT_TIMESTAMP(6)"}, table.columns[1].definition)
 }
 
 func TestIntColumn(t *testing.T) {
@@ -250,6 +250,19 @@ func TestTimestampColumn(t *testing.T) {
 	assert.Len(table.columns, 1)
 	assert.Equal("date", table.columns[0].field)
 	assert.Equal(Timable{Nullable: true, Default: "CURRENT_TIMESTAMP"}, table.columns[0].definition)
+}
+
+func TestPreciseTimestampColumn(t *testing.T) {
+	assert := assert.New(t)
+	table := Table{}
+
+	assert.Nil(table.columns)
+
+	table.PreciseTimestamp("date", 3, true, "CURRENT_TIMESTAMP")
+
+	assert.Len(table.columns, 1)
+	assert.Equal("date", table.columns[0].field)
+	assert.Equal(Timable{Precision: 3, Nullable: true, Default: "CURRENT_TIMESTAMP"}, table.columns[0].definition)
 }
 
 func TestDateColumn(t *testing.T) {

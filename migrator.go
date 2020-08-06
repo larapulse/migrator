@@ -232,7 +232,7 @@ func (m Migrator) createMigrationTable(db *sql.DB) error {
 			"id int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY",
 			"name varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL",
 			"batch int(11) NOT NULL",
-			"applied_at timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+			"applied_at timestamp(6) NULL DEFAULT CURRENT_TIMESTAMP(6)",
 		}, ", "),
 	)
 

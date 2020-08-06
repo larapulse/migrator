@@ -625,7 +625,7 @@ func TestCreateMigrationTable(t *testing.T) {
 		defer resetDB()
 
 		mock.ExpectQuery(`SELECT \* FROM migrations`).WillReturnError(errTestDBQueryFailed)
-		sql := `CREATE TABLE migrations \(id int\(10\) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar\(255\) COLLATE utf8mb4_unicode_ci NOT NULL, batch int\(11\) NOT NULL, applied_at timestamp NULL DEFAULT CURRENT_TIMESTAMP\) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
+		sql := `CREATE TABLE migrations \(id int\(10\) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, name varchar\(255\) COLLATE utf8mb4_unicode_ci NOT NULL, batch int\(11\) NOT NULL, applied_at timestamp\(6\) NULL DEFAULT CURRENT_TIMESTAMP\(6\)\) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
 		mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		err := m.createMigrationTable(db)
@@ -642,7 +642,7 @@ func TestCreateMigrationTable(t *testing.T) {
 		sql := `CREATE TABLE migrations \(` +
 			`id int\(10\) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, ` +
 			`name varchar\(255\) COLLATE utf8mb4_unicode_ci NOT NULL, ` +
-			`batch int\(11\) NOT NULL, applied_at timestamp NULL DEFAULT CURRENT_TIMESTAMP\) ` +
+			`batch int\(11\) NOT NULL, applied_at timestamp\(6\) NULL DEFAULT CURRENT_TIMESTAMP\(6\)\) ` +
 			`ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`
 		mock.ExpectExec(sql).WillReturnError(errTestDBExecFailed)
 

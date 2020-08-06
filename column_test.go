@@ -172,6 +172,26 @@ func TestTimeable(t *testing.T) {
 		assert.Equal(t, "datetime NOT NULL", c.buildRow())
 	})
 
+	t.Run("it does not set precision for invalid column type", func(t *testing.T) {
+		c := Timable{Type: "date", Precision: 3}
+		assert.Equal(t, "date NOT NULL", c.buildRow())
+	})
+
+	t.Run("it does not set zero precision", func(t *testing.T) {
+		c := Timable{Type: "timestamp", Precision: 0}
+		assert.Equal(t, "timestamp NOT NULL", c.buildRow())
+	})
+
+	t.Run("it does not set invalid precision", func(t *testing.T) {
+		c := Timable{Type: "timestamp", Precision: 7}
+		assert.Equal(t, "timestamp NOT NULL", c.buildRow())
+	})
+
+	t.Run("it builds with precision", func(t *testing.T) {
+		c := Timable{Type: "TIMESTAMP", Precision: 6}
+		assert.Equal(t, "TIMESTAMP(6) NOT NULL", c.buildRow())
+	})
+
 	t.Run("it builds nullable column type", func(t *testing.T) {
 		c := Timable{Nullable: true}
 		assert.Equal(t, "timestamp NULL", c.buildRow())

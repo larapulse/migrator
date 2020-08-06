@@ -156,15 +156,16 @@ func (f Floatable) buildRow() string {
 // Timable represents DB representation of timable column type:
 // `date`, `datetime`, `timestamp`, `time` or `year`
 //
-// Default migrator.Timable will build a sql row: `timestamp NOT NULL`
+// Default migrator.Timable will build a sql row: `timestamp NOT NULL`.
+// Precision from 0 to 6 can be set for `datetime`, `timestamp`, `time`.
 //
 // Examples:
 //		date		➡️ migrator.Timable{Type: "date", Nullable: true}
 //			↪️ date NULL
-//		datetime	➡️ migrator.Timable{Type: "datetime", Default: "CURRENT_TIMESTAMP"}
-//			↪️ datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-//		timestamp	➡️ migrator.Timable{Default: "CURRENT_TIMESTAMP", OnUpdate: "CURRENT_TIMESTAMP"}
-//			↪️ timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+//		datetime	➡️ migrator.Timable{Type: "datetime", Precision: 3, Default: "CURRENT_TIMESTAMP"}
+//			↪️ datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+//		timestamp	➡️ migrator.Timable{Default: "CURRENT_TIMESTAMP(6)", OnUpdate: "CURRENT_TIMESTAMP(6)"}
+//			↪️ timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 //		time		➡️ migrator.Timable{Type: "time", Comment: "meeting time"}
 //			↪️ time NOT NULL COMMENT 'meeting time'
 //		year		➡️ migrator.Timable{Type: "year", Nullable: true}
@@ -175,7 +176,8 @@ type Timable struct {
 	Comment  string
 	OnUpdate string
 
-	Type string // date, time, datetime, timestamp, year
+	Type      string // date, time, datetime, timestamp, year
+	Precision uint16
 }
 
 func (t Timable) buildRow() string {
@@ -183,6 +185,12 @@ func (t Timable) buildRow() string {
 
 	if sql == "" {
 		sql = "timestamp"
+	}
+
+	validForPrecision := list{"time", "datetime", "timestamp"}
+	columnType := strings.ToLower(sql)
+	if t.Precision > 0 && t.Precision <= 6 && validForPrecision.has(columnType) {
+		sql += fmt.Sprintf("(%s)", strconv.Itoa(int(t.Precision)))
 	}
 
 	if t.Nullable {

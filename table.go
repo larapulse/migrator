@@ -71,16 +71,18 @@ func (t *Table) UUID(name string, def string, nullable bool) {
 
 // Timestamps adds default timestamps: `created_at` and `updated_at`
 func (t *Table) Timestamps() {
-	// created_at not null default CURRENT_TIMESTAMP
+	// created_at timestamp(6) not null default CURRENT_TIMESTAMP(6)
 	t.Column("created_at", Timable{
-		Type:    "timestamp",
-		Default: "CURRENT_TIMESTAMP",
+		Type:      "timestamp",
+		Precision: 6,
+		Default:   "CURRENT_TIMESTAMP(6)",
 	})
-	// updated_at not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+	// updated_at timestamp(6) not null default CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 	t.Column("updated_at", Timable{
-		Type:     "timestamp",
-		Default:  "CURRENT_TIMESTAMP",
-		OnUpdate: "CURRENT_TIMESTAMP",
+		Type:      "timestamp",
+		Precision: 6,
+		Default:   "CURRENT_TIMESTAMP(6)",
+		OnUpdate:  "CURRENT_TIMESTAMP(6)",
 	})
 }
 
@@ -137,6 +139,11 @@ func (t *Table) JSON(name string) {
 // Timestamp adds timestamp column to the table
 func (t *Table) Timestamp(name string, nullable bool, def string) {
 	t.Column(name, Timable{Nullable: nullable, Default: def})
+}
+
+// PreciseTimestamp adds timestamp column with precision to the table
+func (t *Table) PreciseTimestamp(name string, precision uint16, nullable bool, def string) {
+	t.Column(name, Timable{Precision: precision, Nullable: nullable, Default: def})
 }
 
 // Date adds date column to the table
