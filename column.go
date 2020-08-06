@@ -266,9 +266,7 @@ func (s String) buildRow() string {
 		sql += " NOT NULL"
 	}
 
-	if s.Default != "" {
-		sql += fmt.Sprintf(" DEFAULT '%s'", s.Default)
-	}
+	sql += buildDefaultForString(s.Default)
 
 	if s.OnUpdate != "" {
 		sql += " ON UPDATE " + s.OnUpdate
@@ -343,9 +341,7 @@ func (t Text) buildRow() string {
 		sql += " NOT NULL"
 	}
 
-	if t.Default != "" {
-		sql += fmt.Sprintf(" DEFAULT '%s'", t.Default)
-	}
+	sql += buildDefaultForString(t.Default)
 
 	if t.OnUpdate != "" {
 		sql += " ON UPDATE " + t.OnUpdate
@@ -383,9 +379,7 @@ func (j JSON) buildRow() string {
 		sql += " NOT NULL"
 	}
 
-	if j.Default != "" {
-		sql += fmt.Sprintf(" DEFAULT '%s'", j.Default)
-	}
+	sql += buildDefaultForString(j.Default)
 
 	if j.OnUpdate != "" {
 		sql += " ON UPDATE " + j.OnUpdate
@@ -434,9 +428,7 @@ func (e Enum) buildRow() string {
 		sql += " NOT NULL"
 	}
 
-	if e.Default != "" {
-		sql += fmt.Sprintf(" DEFAULT '%s'", e.Default)
-	}
+	sql += buildDefaultForString(e.Default)
 
 	if e.OnUpdate != "" {
 		sql += " ON UPDATE " + e.OnUpdate
@@ -546,4 +538,16 @@ func (b Binary) buildRow() string {
 	}
 
 	return sql
+}
+
+func buildDefaultForString(v string) string {
+	if v == "" {
+		return ""
+	}
+
+	if v[:1] == "(" && v[len(v)-1:] == ")" {
+		return fmt.Sprintf(" DEFAULT %s", v)
+	}
+
+	return fmt.Sprintf(" DEFAULT '%s'", v)
 }

@@ -563,3 +563,25 @@ func TestBinary(t *testing.T) {
 		)
 	})
 }
+
+func TestBuildDefaultForString(t *testing.T) {
+	t.Run("it returns an empty string if default value is missing", func(t *testing.T) {
+		got := buildDefaultForString("")
+
+		assert.Equal(t, "", got)
+	})
+
+	t.Run("it builds default with expression", func(t *testing.T) {
+		got := buildDefaultForString("(UUID())")
+		want := " DEFAULT (UUID())"
+
+		assert.Equal(t, want, got)
+	})
+
+	t.Run("it builds normal default", func(t *testing.T) {
+		got := buildDefaultForString("value")
+		want := " DEFAULT 'value'"
+
+		assert.Equal(t, want, got)
+	})
+}
