@@ -578,6 +578,20 @@ func TestBuildDefaultForString(t *testing.T) {
 		assert.Equal(t, want, got)
 	})
 
+	t.Run("it builds default with empty string for <empty> value", func(t *testing.T) {
+		got := buildDefaultForString("<empty>")
+		want := " DEFAULT ''"
+
+		assert.Equal(t, want, got)
+	})
+
+	t.Run("it builds default with empty string for <nil> value", func(t *testing.T) {
+		got := buildDefaultForString("<nil>")
+		want := " DEFAULT ''"
+
+		assert.Equal(t, want, got)
+	})
+
 	t.Run("it builds normal default", func(t *testing.T) {
 		got := buildDefaultForString("value")
 		want := " DEFAULT 'value'"

@@ -549,5 +549,9 @@ func buildDefaultForString(v string) string {
 		return fmt.Sprintf(" DEFAULT %s", v)
 	}
 
+	if v == "<empty>" || v == "<nil>" {
+		v = ""
+	}
+
 	return fmt.Sprintf(" DEFAULT '%s'", v)
 }

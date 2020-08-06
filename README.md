@@ -41,8 +41,8 @@ var migrations = []migrator.Migration{
 			posts := migrator.Table{Name: "posts"}
 
 			posts.UniqueID("id")
-			posts.Column("title", migrator.String{Precision: 64})
-			posts.Column("content", migrator.Text{})
+			posts.Varchar("title", 64)
+			posts.Text("content", false)
 			posts.Timestamps()
 
 			s.CreateTable(posts)
@@ -65,8 +65,9 @@ var migrations = []migrator.Migration{
 
 			comments.UniqueID("id")
 			comments.UUID("post_id", "", false)
-			comments.Column("title", migrator.String{Precision: 64})
-			comments.Column("content", migrator.Text{})
+			comments.Varchar("name", 64)
+			comments.Column("email", migrator.String{Default: "<nil>"})
+			comments.Text("content", false)
 			comments.Timestamps()
 
 			comments.Foreign("post_id", "id", "posts", "RESTRICT", "RESTRICT")
