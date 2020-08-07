@@ -1,7 +1,5 @@
 package migrator
 
-import "strings"
-
 // Table is an entity to create a table.
 //
 // - Name		table name
@@ -177,9 +175,9 @@ func (t *Table) Primary(columns ...string) {
 		return
 	}
 
-	t.indexes = append(t.indexes, key{
-		typ:     "primary",
-		columns: columns,
+	t.indexes = append(t.indexes, Key{
+		Type:    "primary",
+		Columns: columns,
 	})
 }
 
@@ -189,10 +187,10 @@ func (t *Table) Unique(columns ...string) {
 		return
 	}
 
-	t.indexes = append(t.indexes, key{
-		name:    t.buildUniqueKeyName(columns...),
-		typ:     "unique",
-		columns: columns,
+	t.indexes = append(t.indexes, Key{
+		Name:    BuildUniqueKeyNameOnTable(t.Name, columns...),
+		Type:    "unique",
+		Columns: columns,
 	})
 }
 
@@ -202,30 +200,22 @@ func (t *Table) Index(name string, columns ...string) {
 		return
 	}
 
-	t.indexes = append(t.indexes, key{name: name, columns: columns})
+	t.indexes = append(t.indexes, Key{Name: name, Columns: columns})
 }
 
 // Foreign adds foreign key constraints
 func (t *Table) Foreign(column string, reference string, on string, onUpdate string, onDelete string) {
-	name := t.buildForeignKeyName(column)
-	t.indexes = append(t.indexes, key{
-		name:    name,
-		columns: []string{column},
+	name := BuildForeignNameOnTable(t.Name, column)
+	t.indexes = append(t.indexes, Key{
+		Name:    name,
+		Columns: []string{column},
 	})
-	t.foreigns = append(t.foreigns, foreign{
-		key:       name,
-		column:    column,
-		reference: reference,
-		on:        on,
-		onUpdate:  onUpdate,
-		onDelete:  onDelete,
+	t.foreigns = append(t.foreigns, Foreign{
+		Key:       name,
+		Column:    column,
+		Reference: reference,
+		On:        on,
+		OnUpdate:  onUpdate,
+		OnDelete:  onDelete,
 	})
-}
-
-func (t *Table) buildUniqueKeyName(columns ...string) string {
-	return t.Name + "_" + strings.Join(columns, "_") + "_unique"
-}
-
-func (t *Table) buildForeignKeyName(column string) string {
-	return t.Name + "_" + column + "_foreign"
 }

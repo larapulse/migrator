@@ -148,7 +148,7 @@ func (c DropIndexCommand) toSQL() string {
 
 // AddForeignCommand adds the foreign key constraint to the table.
 type AddForeignCommand struct {
-	Foreign foreign
+	Foreign Foreign
 }
 
 func (c AddForeignCommand) toSQL() string {

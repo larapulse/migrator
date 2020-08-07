@@ -2,7 +2,7 @@ package migrator
 
 import "strings"
 
-type keys []key
+type keys []Key
 
 func (k keys) render() string {
 	values := []string{}
@@ -17,31 +17,37 @@ func (k keys) render() string {
 	return strings.Join(values, ", ")
 }
 
-type key struct {
-	name    string
-	typ     string // primary, unique
-	columns []string
+// Key represents an instance to handle key (index) interactions
+type Key struct {
+	Name    string
+	Type    string // primary, unique
+	Columns []string
 }
 
 var keyTypes = list{"PRIMARY", "UNIQUE"}
 
-func (k key) render() string {
-	if len(k.columns) == 0 {
+func (k Key) render() string {
+	if len(k.Columns) == 0 {
 		return ""
 	}
 
 	sql := ""
-	if keyTypes.has(strings.ToUpper(k.typ)) {
-		sql += strings.ToUpper(k.typ) + " "
+	if keyTypes.has(strings.ToUpper(k.Type)) {
+		sql += strings.ToUpper(k.Type) + " "
 	}
 
 	sql += "KEY"
 
-	if k.name != "" {
-		sql += " `" + k.name + "`"
+	if k.Name != "" {
+		sql += " `" + k.Name + "`"
 	}
 
-	sql += " (`" + strings.Join(k.columns, "`, `") + "`)"
+	sql += " (`" + strings.Join(k.Columns, "`, `") + "`)"
 
 	return sql
+}
+
+// BuildUniqueKeyNameOnTable builds a name for the foreign key on the table
+func BuildUniqueKeyNameOnTable(table string, columns ...string) string {
+	return table + "_" + strings.Join(columns, "_") + "_unique"
 }

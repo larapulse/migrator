@@ -169,7 +169,7 @@ func TestAddForeignCommand(t *testing.T) {
 	})
 
 	t.Run("it builds a proper row", func(t *testing.T) {
-		c := AddForeignCommand{foreign{key: "idx_foreign", column: "test_id", reference: "id", on: "tests"}}
+		c := AddForeignCommand{Foreign{Key: "idx_foreign", Column: "test_id", Reference: "id", On: "tests"}}
 		assert.Equal(t, "ADD CONSTRAINT `idx_foreign` FOREIGN KEY (`test_id`) REFERENCES `tests` (`id`)", c.toSQL())
 	})
 }

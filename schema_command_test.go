@@ -52,9 +52,9 @@ func TestCreateTableCommand(t *testing.T) {
 	t.Run("it renders indexes", func(t *testing.T) {
 		tb := Table{
 			Name: "test",
-			indexes: []key{
-				{name: "idx_rand", columns: []string{"id"}},
-				{columns: []string{"id", "name"}},
+			indexes: []Key{
+				{Name: "idx_rand", Columns: []string{"id"}},
+				{Columns: []string{"id", "name"}},
 			},
 		}
 		c := createTableCommand{tb}
@@ -74,9 +74,9 @@ func TestCreateTableCommand(t *testing.T) {
 	t.Run("it renders foreigns", func(t *testing.T) {
 		tb := Table{
 			Name: "test",
-			foreigns: []foreign{
-				{key: "idx_foreign", column: "test_id", reference: "id", on: "tests"},
-				{key: "foreign_idx", column: "random_id", reference: "id", on: "randoms"},
+			foreigns: []Foreign{
+				{Key: "idx_foreign", Column: "test_id", Reference: "id", On: "tests"},
+				{Key: "foreign_idx", Column: "random_id", Reference: "id", On: "randoms"},
 			},
 		}
 		c := createTableCommand{tb}
@@ -145,13 +145,13 @@ func TestCreateTableCommand(t *testing.T) {
 				{"test", testColumnType("random thing")},
 				{"random", testColumnType("another thing")},
 			},
-			indexes: []key{
-				{name: "idx_rand", columns: []string{"id"}},
-				{columns: []string{"id", "name"}},
+			indexes: []Key{
+				{Name: "idx_rand", Columns: []string{"id"}},
+				{Columns: []string{"id", "name"}},
 			},
-			foreigns: []foreign{
-				{key: "idx_foreign", column: "test_id", reference: "id", on: "tests"},
-				{key: "foreign_idx", column: "random_id", reference: "id", on: "randoms"},
+			foreigns: []Foreign{
+				{Key: "idx_foreign", Column: "test_id", Reference: "id", On: "tests"},
+				{Key: "foreign_idx", Column: "random_id", Reference: "id", On: "randoms"},
 			},
 			Engine:    "MyISAM",
 			Charset:   "rand",

@@ -84,6 +84,50 @@ var migrations = []migrator.Migration{
 			return s
 		},
 	},
+	{
+		Name: "19700101_0003_rename_foreign_key",
+		Up: func() migrator.Schema {
+			var s migrator.Schema
+
+			keyName := migrator.BuildForeignNameOnTable("comments", "post_id")
+			newKeyName := migrator.BuildForeignNameOnTable("comments", "article_id")
+
+			s.AlterTable("comments", migrator.TableCommands{
+				migrator.DropForeignCommand(keyName),
+				migrator.DropIndexCommand(keyName),
+				migrator.RenameColumnCommand{"post_id", "article_id"},
+				migrator.AddIndexCommand{newKeyName, []string{"article_id"}},
+				migrator.AddForeignCommand{migrator.Foreign{
+					Key:       newKeyName,
+					Column:    "article_id",
+					Reference: "id",
+					On:        "posts",
+				}},
+			})
+
+			return s
+		},
+		Down: func() migrator.Schema {
+			var s migrator.Schema
+
+			keyName := migrator.BuildForeignNameOnTable("comments", "article_id")
+			newKeyName := migrator.BuildForeignNameOnTable("comments", "post_id")
+
+			s.AlterTable("comments", migrator.TableCommands{
+				migrator.DropForeignCommand(keyName),
+				migrator.DropIndexCommand(keyName),
+				migrator.RenameColumnCommand{"article_id", "post_id"},
+				migrator.AddIndexCommand{newKeyName, []string{"post_id"}},
+				migrator.AddForeignCommand{migrator.Foreign{
+					Key:       newKeyName,
+					Column:    "post_id",
+					Reference: "id",
+					On:        "posts",
+				}},
+			})
+
+			return s
+	},
 }
 
 m := migrator.Migrator{Pool: migrations}
@@ -113,6 +157,7 @@ After the first migration run, `migrations` table will be created:
 +----+-------------------------------------+-------+----------------------------+
 |  1 | 19700101_0001_create_posts_table    |     1 | 2020-06-27 00:00:00.000000 |
 |  2 | 19700101_0002_create_comments_table |     1 | 2020-06-27 00:00:00.000000 |
+|  3 | 19700101_0003_rename_foreign_key    |     1 | 2020-06-27 00:00:00.000000 |
 +----+-------------------------------------+-------+----------------------------+
 ```
 

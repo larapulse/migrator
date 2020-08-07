@@ -33,7 +33,7 @@ func TestIDColumn(t *testing.T) {
 	assert.Equal("id", table.columns[0].field)
 	assert.Equal(Integer{Prefix: "big", Unsigned: true, Autoincrement: true}, table.columns[0].definition)
 	assert.Len(table.indexes, 1)
-	assert.Equal(key{typ: "primary", columns: []string{"id"}}, table.indexes[0])
+	assert.Equal(Key{Type: "primary", Columns: []string{"id"}}, table.indexes[0])
 }
 
 func TestUniqueIDColumn(t *testing.T) {
@@ -49,7 +49,7 @@ func TestUniqueIDColumn(t *testing.T) {
 	assert.Equal("id", table.columns[0].field)
 	assert.Equal(String{Default: "(UUID())", Fixed: true, Precision: 36}, table.columns[0].definition)
 	assert.Len(table.indexes, 1)
-	assert.Equal(key{typ: "primary", columns: []string{"id"}}, table.indexes[0])
+	assert.Equal(Key{Type: "primary", Columns: []string{"id"}}, table.indexes[0])
 }
 
 func TestBinaryID(t *testing.T) {
@@ -65,7 +65,7 @@ func TestBinaryID(t *testing.T) {
 	assert.Equal("id", table.columns[0].field)
 	assert.Equal(Binary{Default: "(UUID_TO_BIN(UUID()))", Fixed: true, Precision: 16}, table.columns[0].definition)
 	assert.Len(table.indexes, 1)
-	assert.Equal(key{typ: "primary", columns: []string{"id"}}, table.indexes[0])
+	assert.Equal(Key{Type: "primary", Columns: []string{"id"}}, table.indexes[0])
 }
 
 func TestBooleanColumn(t *testing.T) {
@@ -351,7 +351,7 @@ func TestTablePrimaryIndex(t *testing.T) {
 		table.Primary("id", "name")
 
 		assert.Len(table.indexes, 1)
-		assert.Equal(key{typ: "primary", columns: []string{"id", "name"}}, table.indexes[0])
+		assert.Equal(Key{Type: "primary", Columns: []string{"id", "name"}}, table.indexes[0])
 	})
 }
 
@@ -376,7 +376,7 @@ func TestTableUniqueIndex(t *testing.T) {
 		table.Unique("id", "name")
 
 		assert.Len(table.indexes, 1)
-		assert.Equal(key{name: "table_id_name_unique", typ: "unique", columns: []string{"id", "name"}}, table.indexes[0])
+		assert.Equal(Key{Name: "table_id_name_unique", Type: "unique", Columns: []string{"id", "name"}}, table.indexes[0])
 	})
 }
 
@@ -401,7 +401,7 @@ func TestTableIndex(t *testing.T) {
 		table.Index("test_idx", "id", "name")
 
 		assert.Len(table.indexes, 1)
-		assert.Equal(key{name: "test_idx", columns: []string{"id", "name"}}, table.indexes[0])
+		assert.Equal(Key{Name: "test_idx", Columns: []string{"id", "name"}}, table.indexes[0])
 	})
 }
 
@@ -415,30 +415,10 @@ func TestTableForeignIndex(t *testing.T) {
 	table.Foreign("test_id", "id", "tests", "set null", "cascade")
 
 	assert.Len(table.indexes, 1)
-	assert.Equal(key{name: "table_test_id_foreign", columns: []string{"test_id"}}, table.indexes[0])
+	assert.Equal(Key{Name: "table_test_id_foreign", Columns: []string{"test_id"}}, table.indexes[0])
 	assert.Len(table.foreigns, 1)
 	assert.Equal(
-		foreign{key: "table_test_id_foreign", column: "test_id", reference: "id", on: "tests", onUpdate: "set null", onDelete: "cascade"},
+		Foreign{Key: "table_test_id_foreign", Column: "test_id", Reference: "id", On: "tests", OnUpdate: "set null", OnDelete: "cascade"},
 		table.foreigns[0],
 	)
-}
-
-func TestBuildUniqueIndexName(t *testing.T) {
-	t.Run("It builds name from one column", func(t *testing.T) {
-		table := Table{Name: "table"}
-
-		assert.Equal(t, "table_test_unique", table.buildUniqueKeyName("test"))
-	})
-
-	t.Run("it builds name from multiple columns", func(t *testing.T) {
-		table := Table{Name: "table"}
-
-		assert.Equal(t, "table_test_again_unique", table.buildUniqueKeyName("test", "again"))
-	})
-}
-
-func TestBuildForeignIndexName(t *testing.T) {
-	table := Table{Name: "table"}
-
-	assert.Equal(t, "table_test_foreign", table.buildForeignKeyName("test"))
 }

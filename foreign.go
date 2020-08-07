@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type foreigns []foreign
+type foreigns []Foreign
 
 func (f foreigns) render() string {
 	values := []string{}
@@ -17,29 +17,35 @@ func (f foreigns) render() string {
 	return strings.Join(values, ", ")
 }
 
-type foreign struct {
-	key       string
-	column    string
-	reference string // reference field
-	on        string // reference table
-	onUpdate  string
-	onDelete  string
+// Foreign represents an instance to handle foreign key interactions
+type Foreign struct {
+	Key       string
+	Column    string
+	Reference string // reference field
+	On        string // reference table
+	OnUpdate  string
+	OnDelete  string
 }
 
-func (f foreign) render() string {
-	if f.key == "" || f.column == "" || f.on == "" || f.reference == "" {
+func (f Foreign) render() string {
+	if f.Key == "" || f.Column == "" || f.On == "" || f.Reference == "" {
 		return ""
 	}
 
-	sql := fmt.Sprintf("CONSTRAINT `%s` FOREIGN KEY (`%s`) REFERENCES `%s` (`%s`)", f.key, f.column, f.on, f.reference)
-	if referenceOptions.has(strings.ToUpper(f.onDelete)) {
-		sql += " ON DELETE " + strings.ToUpper(f.onDelete)
+	sql := fmt.Sprintf("CONSTRAINT `%s` FOREIGN KEY (`%s`) REFERENCES `%s` (`%s`)", f.Key, f.Column, f.On, f.Reference)
+	if referenceOptions.has(strings.ToUpper(f.OnDelete)) {
+		sql += " ON DELETE " + strings.ToUpper(f.OnDelete)
 	}
-	if referenceOptions.has(strings.ToUpper(f.onUpdate)) {
-		sql += " ON UPDATE " + strings.ToUpper(f.onUpdate)
+	if referenceOptions.has(strings.ToUpper(f.OnUpdate)) {
+		sql += " ON UPDATE " + strings.ToUpper(f.OnUpdate)
 	}
 
 	return sql
+}
+
+// BuildForeignNameOnTable builds a name for the foreign key on the table
+func BuildForeignNameOnTable(table string, column string) string {
+	return table + "_" + column + "_foreign"
 }
 
 var referenceOptions = list{"SET NULL", "CASCADE", "RESTRICT", "NO ACTION", "SET DEFAULT"}
