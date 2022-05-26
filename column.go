@@ -295,13 +295,13 @@ func (s String) buildRow() string {
 //		longtext	➡️ migrator.Text{Prefix: "long", Default: "write you text", Charset: "utf8mb4", Collate: "utf8mb4_general_ci"}
 //			↪️ longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'write you text'
 //		tinyblob	➡️ migrator.Text{Prefix: "tiny", Blob: true}
-//			↪️ tinyblob COLLATE utf8mb4_unicode_ci NOT NULL
+//			↪️ tinyblob NOT NULL
 //		blob		➡️ migrator.Text{Blob: true}
-//			↪️ blob COLLATE utf8mb4_unicode_ci NOT NULL
+//			↪️ blob NOT NULL
 //		mediumblob	➡️ migrator.Text{Prefix: "medium", Blob: true}
-//			↪️ mediumblob COLLATE utf8mb4_unicode_ci NOT NULL
+//			↪️ mediumblob NOT NULL
 //		longblob	➡️ migrator.Text{Prefix: "long", Blob: true}
-//			↪️ longblob COLLATE utf8mb4_unicode_ci NOT NULL
+//			↪️ longblob NOT NULL
 type Text struct {
 	Default  string
 	Nullable bool
@@ -330,7 +330,7 @@ func (t Text) buildRow() string {
 
 	if t.Collate != "" {
 		sql += " COLLATE " + t.Collate
-	} else if t.Charset == "" {
+	} else if t.Charset == "" && t.Blob == false {
 		// use default
 		sql += " COLLATE utf8mb4_unicode_ci"
 	}
