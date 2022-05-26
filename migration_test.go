@@ -19,7 +19,7 @@ var (
 
 type testDummyCommand string
 
-func (c testDummyCommand) toSQL() string {
+func (c testDummyCommand) ToSQL() string {
 	return string(c)
 }
 
@@ -48,14 +48,14 @@ func TestMigrationExec(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand("test"),
 		}
 
 		mock.ExpectBegin()
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectExec(commands[1].toSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[1].ToSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
 		mock.ExpectCommit()
 
 		// now we execute our method
@@ -69,12 +69,12 @@ func TestMigrationExec(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand("test"),
 		}
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectExec(commands[1].toSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[1].ToSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
 
 		// now we execute our method
 		if err := m.exec(db, commands...); err != nil {
@@ -88,7 +88,7 @@ func TestRunInTransaction(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{}
+		commands := []Command{}
 		want := sqlmock.ErrCancelled
 		mock.ExpectBegin().WillReturnError(want)
 
@@ -101,11 +101,11 @@ func TestRunInTransaction(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{testDummyCommand("run")}
+		commands := []Command{testDummyCommand("run")}
 		want := sqlmock.ErrCancelled
 
 		mock.ExpectBegin()
-		mock.ExpectExec(commands[0].toSQL()).WillReturnError(want)
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnError(want)
 		mock.ExpectRollback()
 
 		// now we execute our method
@@ -117,7 +117,7 @@ func TestRunInTransaction(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{}
+		commands := []Command{}
 		want := sqlmock.ErrCancelled
 
 		mock.ExpectBegin()
@@ -132,14 +132,14 @@ func TestRunInTransaction(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand("test"),
 		}
 
 		mock.ExpectBegin()
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectExec(commands[1].toSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[1].ToSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
 		mock.ExpectCommit()
 
 		// now we execute our method
@@ -154,12 +154,12 @@ func TestRun(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand(""),
 		}
 
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		err := run(db, commands...)
 
@@ -171,13 +171,13 @@ func TestRun(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand("dead"),
 		}
 
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectExec(commands[1].toSQL()).WillReturnError(errTestDBExecFailed)
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[1].ToSQL()).WillReturnError(errTestDBExecFailed)
 
 		err := run(db, commands...)
 
@@ -189,13 +189,13 @@ func TestRun(t *testing.T) {
 		db, mock, resetDB := testDBConnection(t)
 		defer resetDB()
 
-		commands := []command{
+		commands := []Command{
 			testCommand("test"),
 			testDummyCommand("test"),
 		}
 
-		mock.ExpectExec(commands[0].toSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
-		mock.ExpectExec(commands[1].toSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
+		mock.ExpectExec(commands[0].ToSQL()).WillReturnResult(sqlmock.NewResult(1, 1))
+		mock.ExpectExec(commands[1].ToSQL()).WillReturnResult(sqlmock.NewResult(2, 1))
 
 		err := run(db, commands...)
 

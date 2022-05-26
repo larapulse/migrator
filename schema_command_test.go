@@ -9,7 +9,7 @@ import (
 
 type testCommand string
 
-func (c testCommand) toSQL() string {
+func (c testCommand) ToSQL() string {
 	return "Do action on " + string(c)
 }
 
@@ -18,7 +18,7 @@ func TestCreateTableCommand(t *testing.T) {
 		tb := Table{}
 		c := createTableCommand{tb}
 
-		assert.Equal(t, "", c.toSQL())
+		assert.Equal(t, "", c.ToSQL())
 	})
 
 	t.Run("it renders default table", func(t *testing.T) {
@@ -28,7 +28,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -45,7 +45,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`test` random thing, `random` another thing) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -67,7 +67,7 @@ func TestCreateTableCommand(t *testing.T) {
 				"KEY `idx_rand` (`id`), KEY (`id`, `name`)",
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 			}, ""),
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -90,7 +90,7 @@ func TestCreateTableCommand(t *testing.T) {
 				"CONSTRAINT `foreign_idx` FOREIGN KEY (`random_id`) REFERENCES `randoms` (`id`)",
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 			}, ""),
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -101,7 +101,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -112,7 +112,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT) ENGINE=InnoDB DEFAULT CHARSET=rand COLLATE=random_io",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -123,7 +123,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -134,7 +134,7 @@ func TestCreateTableCommand(t *testing.T) {
 		assert.Equal(
 			t,
 			"CREATE TABLE `test` (`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci",
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 
@@ -169,7 +169,7 @@ func TestCreateTableCommand(t *testing.T) {
 				"CONSTRAINT `foreign_idx` FOREIGN KEY (`random_id`) REFERENCES `randoms` (`id`)",
 				") ENGINE=MyISAM DEFAULT CHARSET=rand COLLATE=random_io",
 			}, ""),
-			c.toSQL(),
+			c.ToSQL(),
 		)
 	})
 }
@@ -177,48 +177,48 @@ func TestCreateTableCommand(t *testing.T) {
 func TestDropTableCommand(t *testing.T) {
 	t.Run("it drops table", func(t *testing.T) {
 		c := dropTableCommand{"test", false, ""}
-		assert.Equal(t, "DROP TABLE `test`", c.toSQL())
+		assert.Equal(t, "DROP TABLE `test`", c.ToSQL())
 	})
 
 	t.Run("it drops table if exists", func(t *testing.T) {
 		c := dropTableCommand{"test", true, ""}
-		assert.Equal(t, "DROP TABLE IF EXISTS `test`", c.toSQL())
+		assert.Equal(t, "DROP TABLE IF EXISTS `test`", c.ToSQL())
 	})
 
 	t.Run("it drops table with cascade flag", func(t *testing.T) {
 		c := dropTableCommand{"test", false, "cascade"}
-		assert.Equal(t, "DROP TABLE `test` CASCADE", c.toSQL())
+		assert.Equal(t, "DROP TABLE `test` CASCADE", c.ToSQL())
 	})
 
 	t.Run("it drops table if exists with restrict flag", func(t *testing.T) {
 		c := dropTableCommand{"test", true, "restrict"}
-		assert.Equal(t, "DROP TABLE IF EXISTS `test` RESTRICT", c.toSQL())
+		assert.Equal(t, "DROP TABLE IF EXISTS `test` RESTRICT", c.ToSQL())
 	})
 }
 
 func TestRenameTableCommand(t *testing.T) {
 	c := renameTableCommand{"from", "to"}
 
-	assert.Equal(t, "RENAME TABLE `from` TO `to`", c.toSQL())
+	assert.Equal(t, "RENAME TABLE `from` TO `to`", c.ToSQL())
 }
 
 func TestAlterTableCommand(t *testing.T) {
 	t.Run("it returns an empty command if table name is missing", func(t *testing.T) {
 		c := alterTableCommand{pool: TableCommands{testCommand("test")}}
 
-		assert.Equal(t, "", c.toSQL())
+		assert.Equal(t, "", c.ToSQL())
 	})
 
 	t.Run("it returns an empty command if pool is empty", func(t *testing.T) {
 		c := alterTableCommand{name: "test"}
 
-		assert.Equal(t, "", c.toSQL())
+		assert.Equal(t, "", c.ToSQL())
 	})
 
 	t.Run("it renders command with one alter sub-command", func(t *testing.T) {
 		c := alterTableCommand{name: "test", pool: TableCommands{testCommand("test")}}
 
-		assert.Equal(t, "ALTER TABLE `test` Do action on test", c.toSQL())
+		assert.Equal(t, "ALTER TABLE `test` Do action on test", c.ToSQL())
 	})
 
 	t.Run("it renders command with multiple alter sub-command", func(t *testing.T) {
@@ -227,6 +227,6 @@ func TestAlterTableCommand(t *testing.T) {
 			pool: TableCommands{testCommand("test"), testCommand("bang")},
 		}
 
-		assert.Equal(t, "ALTER TABLE `test` Do action on test, Do action on bang", c.toSQL())
+		assert.Equal(t, "ALTER TABLE `test` Do action on test, Do action on bang", c.ToSQL())
 	})
 }

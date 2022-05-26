@@ -12,7 +12,7 @@ func (c columns) render() string {
 	rows := []string{}
 
 	for _, item := range c {
-		rows = append(rows, fmt.Sprintf("`%s` %s", item.field, item.definition.buildRow()))
+		rows = append(rows, fmt.Sprintf("`%s` %s", item.field, item.definition.BuildRow()))
 	}
 
 	return strings.Join(rows, ", ")
@@ -20,11 +20,11 @@ func (c columns) render() string {
 
 type column struct {
 	field      string
-	definition columnType
+	definition ColumnType
 }
 
-type columnType interface {
-	buildRow() string
+type ColumnType interface {
+	BuildRow() string
 }
 
 // Integer represents an integer value in DB: {tiny,small,medium,big}int
@@ -52,7 +52,7 @@ type Integer struct {
 	Autoincrement bool
 }
 
-func (i Integer) buildRow() string {
+func (i Integer) BuildRow() string {
 	sql := i.Prefix + "int"
 	if i.Precision > 0 {
 		sql += fmt.Sprintf("(%s)", strconv.Itoa(int(i.Precision)))
@@ -115,7 +115,7 @@ type Floatable struct {
 	Scale     uint16
 }
 
-func (f Floatable) buildRow() string {
+func (f Floatable) BuildRow() string {
 	sql := f.Type
 
 	if sql == "" {
@@ -180,7 +180,7 @@ type Timable struct {
 	Precision uint16
 }
 
-func (t Timable) buildRow() string {
+func (t Timable) BuildRow() string {
 	sql := t.Type
 
 	if sql == "" {
@@ -236,7 +236,7 @@ type String struct {
 	Precision uint16
 }
 
-func (s String) buildRow() string {
+func (s String) BuildRow() string {
 	sql := ""
 
 	if !s.Fixed {
@@ -315,7 +315,7 @@ type Text struct {
 	Blob   bool   // for binary
 }
 
-func (t Text) buildRow() string {
+func (t Text) BuildRow() string {
 	sql := t.Prefix
 
 	if t.Blob {
@@ -370,7 +370,7 @@ type JSON struct {
 	OnUpdate string
 }
 
-func (j JSON) buildRow() string {
+func (j JSON) BuildRow() string {
 	sql := "json"
 
 	if j.Nullable {
@@ -411,7 +411,7 @@ type Enum struct {
 	Multiple bool // "set", otherwise "enum"
 }
 
-func (e Enum) buildRow() string {
+func (e Enum) BuildRow() string {
 	sql := ""
 
 	if e.Multiple {
@@ -459,7 +459,7 @@ type Bit struct {
 	Precision uint16
 }
 
-func (b Bit) buildRow() string {
+func (b Bit) BuildRow() string {
 	sql := "bit"
 
 	if b.Precision > 0 {
@@ -506,7 +506,7 @@ type Binary struct {
 	Precision uint16
 }
 
-func (b Binary) buildRow() string {
+func (b Binary) BuildRow() string {
 	sql := ""
 
 	if !b.Fixed {

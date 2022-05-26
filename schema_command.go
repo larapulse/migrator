@@ -5,15 +5,15 @@ import (
 	"strings"
 )
 
-type command interface {
-	toSQL() string
+type Command interface {
+	ToSQL() string
 }
 
 type createTableCommand struct {
 	t Table
 }
 
-func (c createTableCommand) toSQL() string {
+func (c createTableCommand) ToSQL() string {
 	if c.t.Name == "" {
 		return ""
 	}
@@ -66,7 +66,7 @@ type dropTableCommand struct {
 	option string
 }
 
-func (c dropTableCommand) toSQL() string {
+func (c dropTableCommand) ToSQL() string {
 	sql := "DROP TABLE"
 
 	if c.soft {
@@ -88,7 +88,7 @@ type renameTableCommand struct {
 	new string
 }
 
-func (c renameTableCommand) toSQL() string {
+func (c renameTableCommand) ToSQL() string {
 	return fmt.Sprintf("RENAME TABLE `%s` TO `%s`", c.old, c.new)
 }
 
@@ -97,7 +97,7 @@ type alterTableCommand struct {
 	pool TableCommands
 }
 
-func (c alterTableCommand) toSQL() string {
+func (c alterTableCommand) ToSQL() string {
 	if c.name == "" || len(c.pool) == 0 {
 		return ""
 	}
@@ -109,7 +109,7 @@ func (c alterTableCommand) poolToSQL() string {
 	var sql []string
 
 	for _, tc := range c.pool {
-		sql = append(sql, tc.toSQL())
+		sql = append(sql, tc.ToSQL())
 	}
 
 	return strings.Join(sql, ", ")

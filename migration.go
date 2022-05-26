@@ -44,7 +44,7 @@ type Migration struct {
 	Transaction bool
 }
 
-func (m Migration) exec(db *sql.DB, commands ...command) error {
+func (m Migration) exec(db *sql.DB, commands ...Command) error {
 	if m.Transaction {
 		return runInTransaction(db, commands...)
 	}
@@ -52,7 +52,7 @@ func (m Migration) exec(db *sql.DB, commands ...command) error {
 	return run(db, commands...)
 }
 
-func runInTransaction(db *sql.DB, commands ...command) error {
+func runInTransaction(db *sql.DB, commands ...Command) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -72,9 +72,9 @@ func runInTransaction(db *sql.DB, commands ...command) error {
 	return nil
 }
 
-func run(db executableSQL, commands ...command) error {
+func run(db executableSQL, commands ...Command) error {
 	for _, command := range commands {
-		sql := command.toSQL()
+		sql := command.ToSQL()
 		if sql == "" {
 			return ErrNoSQLCommandsToRun
 		}
