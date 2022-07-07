@@ -308,12 +308,12 @@ func TestText(t *testing.T) {
 
 	t.Run("it builds blob", func(t *testing.T) {
 		c := Text{Blob: true}
-		assert.Equal(t, "blob COLLATE utf8mb4_unicode_ci NOT NULL", c.buildRow())
+		assert.Equal(t, "blob NOT NULL", c.buildRow())
 	})
 
 	t.Run("it builds blob with prefix", func(t *testing.T) {
 		c := Text{Prefix: "tiny", Blob: true}
-		assert.Equal(t, "tinyblob COLLATE utf8mb4_unicode_ci NOT NULL", c.buildRow())
+		assert.Equal(t, "tinyblob NOT NULL", c.buildRow())
 	})
 
 	t.Run("it builds with charset", func(t *testing.T) {
@@ -349,7 +349,7 @@ func TestText(t *testing.T) {
 	t.Run("it builds string with all parameters", func(t *testing.T) {
 		c := Text{
 			Prefix:   "long",
-			Blob:     true,
+			Blob:     false,
 			Nullable: true,
 			Charset:  "utf8mb4",
 			Collate:  "utf8mb4_general_ci",
@@ -360,7 +360,7 @@ func TestText(t *testing.T) {
 
 		assert.Equal(
 			t,
-			"longblob CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'nice' ON UPDATE set null COMMENT 'test'",
+			"longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'nice' ON UPDATE set null COMMENT 'test'",
 			c.buildRow(),
 		)
 	})
