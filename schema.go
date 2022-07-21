@@ -3,7 +3,7 @@ package migrator
 // Schema allows adding commands on the schema.
 // It should be used within migration to add migration commands.
 type Schema struct {
-	pool []command
+	pool []Command
 }
 
 // CreateTable allows creating the table in the schema.
@@ -65,13 +65,13 @@ func (s *Schema) AlterTable(name string, c TableCommands) {
 // Example:
 //		type customCommand string
 //
-//		func (c customCommand) toSQL() string {
+//		func (c customCommand) ToSQL() string {
 //			return string(c)
 //		}
 //
 //		c := customCommand("DROP PROCEDURE abc")
 //		var s migrator.Schema
 //		s.CustomCommand(c)
-func (s *Schema) CustomCommand(c command) {
+func (s *Schema) CustomCommand(c Command) {
 	s.pool = append(s.pool, c)
 }

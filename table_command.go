@@ -7,13 +7,13 @@ import (
 
 // TableCommands is a pool of commands to be executed on the table.
 // https://dev.mysql.com/doc/refman/8.0/en/alter-table.html
-type TableCommands []command
+type TableCommands []Command
 
-func (tc TableCommands) toSQL() string {
+func (tc TableCommands) ToSQL() string {
 	rows := []string{}
 
 	for _, c := range tc {
-		rows = append(rows, c.toSQL())
+		rows = append(rows, c.ToSQL())
 	}
 
 	return strings.Join(rows, ", ")
@@ -22,17 +22,17 @@ func (tc TableCommands) toSQL() string {
 // AddColumnCommand is a command to add the column to the table.
 type AddColumnCommand struct {
 	Name   string
-	Column columnType
+	Column ColumnType
 	After  string
 	First  bool
 }
 
-func (c AddColumnCommand) toSQL() string {
+func (c AddColumnCommand) ToSQL() string {
 	if c.Column == nil {
 		return ""
 	}
 
-	definition := c.Column.buildRow()
+	definition := c.Column.BuildRow()
 	if c.Name == "" || definition == "" {
 		return ""
 	}
@@ -57,7 +57,7 @@ type RenameColumnCommand struct {
 	New string
 }
 
-func (c RenameColumnCommand) toSQL() string {
+func (c RenameColumnCommand) ToSQL() string {
 	if c.Old == "" || c.New == "" {
 		return ""
 	}
@@ -71,15 +71,15 @@ func (c RenameColumnCommand) toSQL() string {
 // Info ℹ️ extension for Oracle compatibility.
 type ModifyColumnCommand struct {
 	Name   string
-	Column columnType
+	Column ColumnType
 }
 
-func (c ModifyColumnCommand) toSQL() string {
+func (c ModifyColumnCommand) ToSQL() string {
 	if c.Column == nil {
 		return ""
 	}
 
-	definition := c.Column.buildRow()
+	definition := c.Column.BuildRow()
 	if c.Name == "" || definition == "" {
 		return ""
 	}
@@ -92,20 +92,20 @@ func (c ModifyColumnCommand) toSQL() string {
 type ChangeColumnCommand struct {
 	From   string
 	To     string
-	Column columnType
+	Column ColumnType
 }
 
-func (c ChangeColumnCommand) toSQL() string {
+func (c ChangeColumnCommand) ToSQL() string {
 	if c.Column == nil {
 		return ""
 	}
 
-	definition := c.Column.buildRow()
+	definition := c.Column.BuildRow()
 	if c.From == "" || c.To == "" || definition == "" {
 		return ""
 	}
 
-	return fmt.Sprintf("CHANGE `%s` `%s` %s", c.From, c.To, c.Column.buildRow())
+	return fmt.Sprintf("CHANGE `%s` `%s` %s", c.From, c.To, c.Column.BuildRow())
 }
 
 // DropColumnCommand is a command to drop a column from the table.
@@ -113,7 +113,7 @@ func (c ChangeColumnCommand) toSQL() string {
 type DropColumnCommand string
 
 // Info ℹ️ campatible with Oracle
-func (c DropColumnCommand) toSQL() string {
+func (c DropColumnCommand) ToSQL() string {
 	if c == "" {
 		return ""
 	}
@@ -127,7 +127,7 @@ type AddIndexCommand struct {
 	Columns []string
 }
 
-func (c AddIndexCommand) toSQL() string {
+func (c AddIndexCommand) ToSQL() string {
 	if c.Name == "" || len(c.Columns) == 0 {
 		return ""
 	}
@@ -138,7 +138,7 @@ func (c AddIndexCommand) toSQL() string {
 // DropIndexCommand removes the key from the table.
 type DropIndexCommand string
 
-func (c DropIndexCommand) toSQL() string {
+func (c DropIndexCommand) ToSQL() string {
 	if c == "" {
 		return ""
 	}
@@ -151,7 +151,7 @@ type AddForeignCommand struct {
 	Foreign Foreign
 }
 
-func (c AddForeignCommand) toSQL() string {
+func (c AddForeignCommand) ToSQL() string {
 	if c.Foreign.render() == "" {
 		return ""
 	}
@@ -162,7 +162,7 @@ func (c AddForeignCommand) toSQL() string {
 // DropForeignCommand is a command to remove a foreign key constraint.
 type DropForeignCommand string
 
-func (c DropForeignCommand) toSQL() string {
+func (c DropForeignCommand) ToSQL() string {
 	if c == "" {
 		return ""
 	}
@@ -176,7 +176,7 @@ type AddUniqueIndexCommand struct {
 	Columns []string
 }
 
-func (c AddUniqueIndexCommand) toSQL() string {
+func (c AddUniqueIndexCommand) ToSQL() string {
 	if c.Key == "" || len(c.Columns) == 0 {
 		return ""
 	}
@@ -187,7 +187,7 @@ func (c AddUniqueIndexCommand) toSQL() string {
 // AddPrimaryIndexCommand is a command to add a primary key.
 type AddPrimaryIndexCommand string
 
-func (c AddPrimaryIndexCommand) toSQL() string {
+func (c AddPrimaryIndexCommand) ToSQL() string {
 	if c == "" {
 		return ""
 	}
@@ -198,7 +198,7 @@ func (c AddPrimaryIndexCommand) toSQL() string {
 // DropPrimaryIndexCommand is a command to remove the primary key from the table.
 type DropPrimaryIndexCommand struct{}
 
-func (c DropPrimaryIndexCommand) toSQL() string {
+func (c DropPrimaryIndexCommand) ToSQL() string {
 	return "DROP PRIMARY KEY"
 }
 

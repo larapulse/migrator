@@ -233,12 +233,12 @@ reverted, err := m.Revert(db)
 
 ## Customize queries
 
-You may add any column definition to the database on your own, just be sure you implement `columnType` interface:
+You may add any column definition to the database on your own, just be sure you implement `ColumnType` interface:
 
 ```go
 type customType string
 
-func (ct customType) buildRow() string {
+func (ct customType) BuildRow() string {
 	return string(ct)
 }
 
@@ -248,12 +248,12 @@ posts.Column("data", customType("json not null"))
 posts.Timestamps()
 ```
 
-The same logic is for adding custom commands to the Schema to be migrated or reverted, just be sure you implement `command` interface:
+The same logic is for adding custom commands to the Schema to be migrated or reverted, just be sure you implement `Command` interface:
 
 ```go
 type customCommand string
 
-func (cc customCommand) toSQL() string {
+func (cc customCommand) ToSQL() string {
 	return string(cc)
 }
 

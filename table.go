@@ -19,7 +19,7 @@ type Table struct {
 }
 
 // Column adds a column to the table
-func (t *Table) Column(name string, c columnType) {
+func (t *Table) Column(name string, c ColumnType) {
 	t.columns = append(t.columns, column{field: name, definition: c})
 }
 

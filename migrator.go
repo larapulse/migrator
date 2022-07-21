@@ -31,6 +31,8 @@ var (
 	ErrNoSQLCommandsToRun = errors.New("There are no commands to be executed")
 )
 
+type Logger func(format string, args ...interface{}) //use fmt.Sprintf
+
 type migrationEntry struct {
 	id        uint64
 	name      string
@@ -48,6 +50,8 @@ type Migrator struct {
 	// stack of migrations
 	Pool     []Migration
 	executed []migrationEntry
+
+	Logger Logger
 }
 
 // Migrate runs all migrations from pool and stores in migration table executed migration.
@@ -80,7 +84,7 @@ func (m Migrator) Migrate(db *sql.DB) (migrated []string, err error) {
 		if len(s.pool) == 0 {
 			return migrated, ErrNoSQLCommandsToRun
 		}
-		if err := item.exec(db, s.pool...); err != nil {
+		if err := item.exec(db, m.Logger, s.pool...); err != nil {
 			return migrated, err
 		}
 
@@ -133,7 +137,7 @@ func (m Migrator) Rollback(db *sql.DB) (reverted []string, err error) {
 				if len(s.pool) == 0 {
 					return reverted, ErrNoSQLCommandsToRun
 				}
-				if err := item.exec(db, s.pool...); err != nil {
+				if err := item.exec(db, m.Logger, s.pool...); err != nil {
 					return reverted, err
 				}
 
@@ -184,7 +188,7 @@ func (m Migrator) Revert(db *sql.DB) (reverted []string, err error) {
 				if len(s.pool) == 0 {
 					return reverted, ErrNoSQLCommandsToRun
 				}
-				if err := item.exec(db, s.pool...); err != nil {
+				if err := item.exec(db, m.Logger, s.pool...); err != nil {
 					return reverted, err
 				}
 
